@@ -123,7 +123,7 @@ a string or pathname, return its merged pathname instead."
     (t
      (init-file-name-for implementation))))
 
-(defun add-to-init-file (&optional implementation-or-file)
+(defun add-to-init-file (&optional implementation-or-file &key (prompt t))
   "Add forms to the Lisp implementation's init file that will load
 quicklisp at CL startup."
   (let ((init-file (suitable-lisp-init-file implementation-or-file)))
@@ -133,7 +133,7 @@ quicklisp at CL startup."
     (format *query-io* "~&I will append the following lines to ~S:~%"
             init-file)
     (write-init-forms *query-io* :indentation 2)
-    (when (ql-util:press-enter-to-continue)
+    (when (or (not prompt) (ql-util:press-enter-to-continue))
       (with-open-file (stream init-file
                               :direction :output
                               :if-does-not-exist :create
